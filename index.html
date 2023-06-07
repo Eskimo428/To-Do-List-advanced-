@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Список задач</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/505dea363c.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./style.css">
+    
+</head>
+
+<body>
+    <header class="header">
+        <h1 class="header__title">
+            Todo List
+        </h1>
+    </header>
+    <main class="content">
+        <div class="date__panel">
+            <button class="date__panel-btn btn">
+                Сегодня
+            </button>
+            <div class="date__panel-nav">
+                <div class="date__panel-prev arrows">&#10094;</div>
+                <span class="date-today"></span>
+                <div class="date__panel-next arrows">&#10095;</div>
+            </div>
+            <form class="date__panel-form" action="">
+                <input type="text" name="text" class="search-txt" placeholder="Поиск" />
+
+                <a class="search-btn" href="#">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </a>
+            </form>
+        </div>
+
+        <div class="calendar-container">
+            <div class="calendar display-none">
+                <div class="calendar-header">
+                    <button id="prevBtn">&lt;</button>
+                    <h2 id="monthYear"></h2>
+                    <button id="nextBtn">&gt;</button>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-day">Пн</div>
+                    <div class="calendar-day">Вт</div>
+                    <div class="calendar-day">Ср</div>
+                    <div class="calendar-day">Чт</div>
+                    <div class="calendar-day">Пт</div>
+                    <div class="calendar-day">Сб</div>
+                    <div class="calendar-day">Вс</div>
+                </div>
+                <div class="calendar-grid" id="calendarBody"></div>
+            </div>
+        </div>
+
+        <div class="card">
+
+            <div class="tasks" id="tasks">
+                <button class="tasks__add" id="tasks__add">
+                  <i class="fa-solid fa-plus"></i>    Добавить
+                </button>
+
+
+
+
+                <div class="tasks__add-new display-none">
+                    <form class="tasks__add-new-form" action="">
+                        <input class="tasks__add-item" type="text" id="form-header" placeholder="Добавьте название">
+                        <textarea class="tasks__add-item" name="" id="form-descr" cols="20" rows="3"
+                            placeholder="Опиши, что хотел сделать"></textarea>
+                        <div> <input class="tasks__add-item" id="form-place" type="text" placeholder="Место">
+                        </div>
+                        <div>
+                            <span class="tasks__add-error-message">Поле обязательно для ввода</span>
+                            <input class="tasks__add-item" id="form-date" type="datetime-local" name="task-date"
+                                required>
+                        </div>
+                        <input class="tasks__add-item" type="file">
+                        <div class="tasks__add-control">
+                            <button class="tasks__save"> Сохранить</button>
+                            <button class="tasks__close"> Закрыть</button>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="tasks__list" id="tasks__list">
+                    <div class="tasks__list-container">
+                        <div class="task__list-items">
+                            <a  class="task__list-controls-item">Личные
+                                <i class="fa-solid fa-user"></i>
+                            </a>
+                            <a  class="task__list-controls-item">Важные
+                                <i class="fa-solid fa-circle-exclamation"></i>
+                            </a>
+                            <a  class="task__list-controls-item">Рабочие
+                                <i class="fa-solid fa-briefcase"></i>
+                            </a>
+
+                        </div>
+                        <div class="task__list-new-item space-around display-none">
+                            <input class="task__list-input" type="text" placeholder="новая группа" maxlength="15"
+                                size="15" tabindex="0" autofocus>
+                            <span class="task__list-confirm">☑️</span>
+                        </div>
+                        <div class="task__list-controls">
+                            <button class="task__list-btn-add">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task">
+                        <div class="task-container">
+                            <p class="task__new-header">
+                                Новые
+                            </p>
+
+
+
+                            <p class="task__completed-header">
+                                В процессе
+                            </p>
+
+                            <p class="task__completed-header">
+                                Завершенные
+                            </p>
+
+
+                        </div>
+
+                        <div class="task-container-item">
+                            <div class="task__new">
+
+                            </div>
+                            <div class="task__process ">
+
+                            </div>
+                            <div class="task__completed">
+                             
+
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="task__full-list">
+                <div class="task__new-item full-list-container">
+                    <span class="full-list-date-today"></span>
+                    <i class="fa-solid fa-bars-progress"></i>
+                    
+                    <div id="container">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+
+
+
+
+
+
+
+
+
+    <script defer src="./script.js"></script>
+
+
+</body>
+
+</html>
