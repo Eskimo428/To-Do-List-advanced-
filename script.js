@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
 
-
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const monthYear = document.getElementById("monthYear");
@@ -39,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let taskData = JSON.parse(localStorage.getItem('taskData')) || [];
   let removeCompletedTaskBtn;
   let taskId;
+  let taskDescription = ''
 
 
 
@@ -257,10 +257,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-
-
-
-
   function addItem() {
     inputField.classList.remove('display-none');
 
@@ -324,8 +320,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
-
-
   function createNewTask() {
     createTaskForm.classList.remove('display-none')
   }
@@ -340,10 +334,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
-
-
-
-
   function saveNewTask(event) {
 
     event.preventDefault();
@@ -352,6 +342,8 @@ document.addEventListener('DOMContentLoaded', function () {
     formDescr.textContent = formDescr.value;
     formPlace.textContent = formPlace.value;
     formDate.textContent = formDate.value;
+
+    taskDescription = formDescr.value;
 
     let uniqueId = Date.now();
 
@@ -380,6 +372,9 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
         <div class="task__time">
           ${formDate.value}
+        </div>
+        <div class="task__full-list-decription display-none">
+        ${formDescr.value}
         </div>
         <div class="task__btns">
           <a href="#" class="task__done"><i class="fa-solid fa-circle-check"></i></a>
@@ -460,8 +455,8 @@ document.addEventListener('DOMContentLoaded', function () {
       taskData[existingTaskIndex].formDescr = formDescr.value;
     }
 
-    
-    
+
+
     localStorage.setItem('taskData', JSON.stringify(taskData));
 
     let doneButton = newElement.querySelector('.task__done');
@@ -474,12 +469,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (indexToRemoveNewTask !== -1) {
         taskData.splice(indexToRemoveNewTask, 1);
       }
-    
+
       let indexToRemoveInProgress = taskData.findIndex((task) => task.taskId === taskId && task.status === 'inProcess');
       if (indexToRemoveInProgress !== -1) {
         taskData.splice(indexToRemoveInProgress, 1);
       }
-    
+
       localStorage.setItem('taskData', JSON.stringify(taskData));
 
       newElementForFullList.remove();
@@ -522,9 +517,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     updateTaskDate()
-
     closeNewTask(event);
-
     showCalendar()
 
   };
@@ -559,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 
-  function ggg() {
+  function saveLocalstorage() {
     let taskData = JSON.parse(localStorage.getItem('taskData'));
     if (taskData) {
       for (let task of taskData) {
@@ -593,6 +586,9 @@ document.addEventListener('DOMContentLoaded', function () {
           </div>
           <div class="task__time">
             ${task.formDate}
+          </div>
+          <div class="task__full-list-decription display-none">
+          ${task.formDescr}
           </div>
           <div class="task__btns">
             <a href="#" class="task__done">  <i class="fa-solid fa-circle-check"></i></a>
@@ -653,7 +649,7 @@ document.addEventListener('DOMContentLoaded', function () {
           taskContainer.appendChild(newElementForFullList);
           newTask.appendChild(newElement)
 
-  
+
 
           let processTask = newElement.querySelector('.task__in-progress');
           processTask.addEventListener('click', inProcess);
@@ -704,7 +700,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
           });
 
-      
+
           let taskId = uniqueId;
           removeCompletedTaskBtn = newElement.querySelector('.task__remove');
           removeCompletedTaskBtn.addEventListener('click', removeTask);
@@ -741,6 +737,9 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
             <div class="task__time">
               ${task.formDate}
+            </div>
+            <div class="task__full-list-decription display-none">
+            ${task.formDescr}
             </div>
             <div class="task__btns">
               <a href="#" class="task__done"><i class="fa-solid fa-circle-check"></i></a>
@@ -815,10 +814,19 @@ document.addEventListener('DOMContentLoaded', function () {
               taskData.splice(indexToRemoveInProgress, 1);
             }
             removeTaskLocalstorage(taskId);
-            console.log(taskId)
+
           });
 
           doneButton.addEventListener('click', doneTask);
+
+
+          let taskId = uniqueId;
+          removeCompletedTaskBtn = inProcessElement.querySelector('.task__remove');
+          removeCompletedTaskBtn.addEventListener('click', removeTask);
+          removeCompletedTaskBtn.addEventListener('click', () => {
+            newElementForFullList.remove();
+            removeTaskLocalstorage(taskId);
+          });
 
         } else if (task.status === 'done') {
           let doneElement = document.createElement('div');
@@ -848,6 +856,9 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
             <div class="task__time">
               ${task.formDate}
+            </div>
+            <div class="task__full-list-decription display-none">
+            ${task.formDescr}
             </div>
             <div class="task__btns" style="justify-content: right;">
               <a href="#" class="task__remove" data-task-id="${uniqueId}">     <i class="fa-solid fa-trash-can"></i></a>
@@ -917,7 +928,7 @@ document.addEventListener('DOMContentLoaded', function () {
     showCalendar()
   }
 
-  ggg();
+  saveLocalstorage();
 
 
 
@@ -931,6 +942,8 @@ document.addEventListener('DOMContentLoaded', function () {
     formHeader.value = taskItem.querySelector('.task__title').textContent
     formPlace.value = taskItem.querySelector('.task__place').textContent
     formDate.value = taskItem.querySelector('.task__time').innerText
+    formDescr.value = taskItem.querySelector('.task__full-list-decription').textContent
+
     let newElement = document.createElement('div')
     newElement.innerHTML = `
     <div class="task__new-item task__new-item-background-process">
@@ -954,11 +967,14 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="task__time">
        ${formDate.value}
     </div>
+    <div class="task__full-list-decription display-none">
+    ${formDescr.value}
+    </div>
     <div class="task__btns">
     <a href="#" class="task__done">  <i class="fa-solid fa-circle-check"></i></a>
     <a href="#" class="task__remove" data-task-id="${uniqueId}"> <i class="fa-solid fa-trash-can"></i></a>
-</div>
-</div>`
+    </div>
+    </div>`
     processTask.appendChild(newElement)
 
 
@@ -993,9 +1009,16 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
     </div>`
 
-    newElementForFullList.dataset.fullListItem = uniqueId;
-    fullListContainer.appendChild(newElementForFullList);
+    let taskDate = new Date(formDate.value);
+    let formattedDate = taskDate.toISOString().slice(0, 10);
 
+    newElementForFullList.setAttribute('data-date', formattedDate);
+
+
+    let taskContainer = document.querySelector('[data-date="' + formattedDate + '"]')
+    newElementForFullList.dataset.fullListItem = uniqueId;
+
+    taskContainer.appendChild(newElementForFullList);
 
     let taskData = JSON.parse(localStorage.getItem('taskData')) || [];
     let newTask = {
@@ -1044,9 +1067,15 @@ document.addEventListener('DOMContentLoaded', function () {
     let wrapperElement = taskItem.parentNode;
     let uniqueId = Date.now();
 
+
+
     formHeader.value = taskItem.querySelector('.task__title').textContent
     formPlace.value = taskItem.querySelector('.task__place').textContent
+    formDescr.value = taskItem.querySelector('.task__full-list-decription').textContent
     formDate.value = taskItem.querySelector('.task__time').innerText
+    
+
+
 
     let newElement = document.createElement('div');
     newElement.classList.add('task__new-item', 'task__title-done');
@@ -1075,6 +1104,9 @@ document.addEventListener('DOMContentLoaded', function () {
       <div class="task__time">
       ${formDate.value}
    </div>
+   <div class="task__full-list-decription display-none">
+   ${formDescr.value}
+   </div>
    <div class="task__btns" style="display:flex;justify-content: right;" >
    <a href="#" class="task__remove" data-task-id="${uniqueId}">   <i class="fa-solid fa-trash-can"></i></a>
 
@@ -1082,11 +1114,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     completedTask.appendChild(newElement)
 
-    let newElementForFullList = document.createElement('div');
 
+    let newElementForFullList = document.createElement('div');
+    newElementForFullList.setAttribute('data-task-id', uniqueId);
     newElementForFullList.innerHTML = `
       <div class="task__new-item full-list-container task__title-done">
-        <div class="task__title">
+        <div class="task__title  task__title-done-text">
           ${formHeader.value}
         </div>
         <div class="task__place">
@@ -1110,13 +1143,18 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="task__full-list-decription">
         ${formDescr.value}
         </div>
-      </div>
-    </div>`
+    </div>`;
+
+    let taskDate = new Date(formDate.value);
+    let formattedDate = taskDate.toISOString().slice(0, 10);
+
+    newElementForFullList.setAttribute('data-date', formattedDate);
 
 
+    let taskContainer = document.querySelector('[data-date="' + formattedDate + '"]')
     newElementForFullList.dataset.fullListItem = uniqueId;
 
-    fullListContainer.appendChild(newElementForFullList);
+    taskContainer.appendChild(newElementForFullList);
 
     taskData = JSON.parse(localStorage.getItem('taskData')) || [];
 
@@ -1139,7 +1177,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (indexToRemoveNewTask !== -1) {
       taskData.splice(indexToRemoveNewTask, 1);
     }
-    
+
 
 
     let indexToRemoveInProgress = taskData.findIndex((task) => task.taskId === taskId && task.status === 'inProcess');
@@ -1152,7 +1190,7 @@ document.addEventListener('DOMContentLoaded', function () {
     taskItem.remove()
     closeNewTask(event)
     wrapperElement.remove()
-    
+
     taskId = uniqueId
     let removeCompletedTaskBtn = newElement.querySelector('.task__remove')
     removeCompletedTaskBtn.addEventListener('click', removeTask)
@@ -1160,7 +1198,9 @@ document.addEventListener('DOMContentLoaded', function () {
       removeTaskLocalstorage(taskId);
       newElementForFullList.remove();
     })
-    
+
+
+
     showCalendar()
   }
 
